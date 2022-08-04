@@ -50,6 +50,7 @@ class _HomeScreenState extends State {
   ];
 
   Student selectedStudent = Student.withId(0, "None", "", 0, "");
+  int index=0;
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +104,8 @@ class _HomeScreenState extends State {
     setState(() {});
   }
 
-  updateListStudents(List<Student> students){
-    this.students = students;
+  updateListStudents(Student student){
+    this.selectedStudent = student;
   }
 
   builderListView() {
@@ -123,11 +124,12 @@ class _HomeScreenState extends State {
               onTap: (){
                 setState(() {
                   selectedStudent=students[index];
+                  this.index = index;
                 });
                 print("${students[index].firstName} seçildi");
               },
               onLongPress: () {
-                Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,students[index]));
+                Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
                 Navigator.push(context, route).then(onGoBack);
               },
             ),
@@ -178,10 +180,10 @@ class _HomeScreenState extends State {
         ),
         onPressed: () {
           if (selectedStudent.id==0) {
-            
+            print("Lütfen bir öğrenci seçiniz");
           }
           else{
-            Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,selectedStudent));
+            Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
             Navigator.push(context, route).then(onGoBack);
           }
         },

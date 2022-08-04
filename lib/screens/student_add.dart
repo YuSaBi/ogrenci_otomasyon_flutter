@@ -53,7 +53,6 @@ class _StudentAddState extends State<StudentAdd>{
   /// KULLANICI ADI ///
   Widget buildFirstNameField() {
     return TextFormField(
-      
       decoration: const InputDecoration(
         labelText: "Öğrenci adı",
         //hintText: "Oğuz",
@@ -93,7 +92,6 @@ class _StudentAddState extends State<StudentAdd>{
   /// KAYDET BUTONU ///
   Widget buildSubmitButton() {
     return ElevatedButton(
-
       child: const Text("Kaydet"),
       onPressed: () {
         formKey.currentState!.save();// Tüm formField'ların onSaved'larını çalıştırır
