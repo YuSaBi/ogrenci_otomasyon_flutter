@@ -34,9 +34,9 @@ class _HomeScreenState extends State {
   //const HomeScreen({Key? key}) : super(key: key);
 
   List<Student> students = [
-    Student.withId(1, "oğuz", "can", 25, "https://i.pravatar.cc/52"),
-    Student.withId(2, "oğuz", "can", 45, "https://i.pravatar.cc/53"),
-    Student.withId(2, "oğuz", "can", 77, "https://i.pravatar.cc/54"),
+    Student.withId(1, "oğuzcan", "flutter", 25, "https://i.pravatar.cc/31"),
+    Student.withId(2, "salih", "öz", 45, "https://i.pravatar.cc/32"),
+    Student.withId(2, "ekrem", "sivri", 77, "https://i.pravatar.cc/33"),
     //Student.withId(2, "oğuz", "can", 15, "https://i.pravatar.cc/55"),
     //Student.withId(2, "oğuz", "can", 75, "https://i.pravatar.cc/56"),
     //Student.withId(2, "oğuz", "can", 35, "https://i.pravatar.cc/57"),
@@ -45,8 +45,8 @@ class _HomeScreenState extends State {
     //Student.withId(2, "mert", "akif", 40, "https://i.pravatar.cc/49"),
     //Student.withId(2, "kerim", "usta", 50, "https://i.pravatar.cc/48"),
     //Student.withId(2, "kerim", "usta", 90, "https://i.pravatar.cc/47"),
-    Student.withId(2, "kerim", "usta", 18, "https://i.pravatar.cc/46"),
-    Student.withId(3, "mert", "korkmaz", 85, "https://i.pravatar.cc/51")
+    Student.withId(2, "kerim", "usta", 18, "https://i.pravatar.cc/34"),
+    Student.withId(3, "mert", "korkmaz", 85, "https://i.pravatar.cc/35")
   ];
 
   Student selectedStudent = Student.withId(0, "None", "", 0, "");
@@ -100,12 +100,25 @@ class _HomeScreenState extends State {
     }
   }
   
-  FutureOr onGoBack(dynamic value){
+  FutureOr onGoBackFunc(dynamic value){
     setState(() {});
   }
 
-  updateListStudents(Student student){
+  removeOnList(List student,int index){
+    student.removeAt(index);
+  }
+
+  /*updateListStudents(Student student){
     this.selectedStudent = student;
+    Navigator.pop(context);
+  }*/
+
+  bool updateListSelected(List<Student> students,int index){
+    if (students[index].secili==true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   builderListView() {
@@ -115,6 +128,9 @@ class _HomeScreenState extends State {
         return Column(
           children: [
             ListTile(
+              selected: updateListSelected(students,index),
+              selectedColor: Colors.black,
+              selectedTileColor: Colors.blue.shade100,
               title: Text("${students[index].firstName} ${students[index].lastName}"),
               subtitle: Text("Sınavdan aldığı not : ${students[index].grade} [${students[index].getStatus}]"),
               leading: CircleAvatar(
@@ -124,13 +140,20 @@ class _HomeScreenState extends State {
               onTap: (){
                 setState(() {
                   selectedStudent=students[index];
-                  this.index = index;
+                  students.forEach((stdnts) => stdnts.secili = false);
+                  students[index].secili=true;
                 });
-                print("${students[index].firstName} seçildi");
+                this.index = index;
+                /*Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
+                Navigator.push(context, route).then(onGoBackFunc);*/
               },
               onLongPress: () {
                 Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
-                Navigator.push(context, route).then(onGoBack);
+                Navigator.push(context, route).then(onGoBackFunc);
+                /*setState(() {
+                  students.removeAt(index);// Seçilen kullanıcıyı silme
+                });*/
+                
               },
             ),
             Divider(height: 5.0,color: Colors.blue.shade300,thickness: 1.0,)
@@ -156,7 +179,7 @@ class _HomeScreenState extends State {
         onPressed: () {
           //print("Eklendi");
           Route route = MaterialPageRoute(builder: (context) => StudentAdd(students));
-          Navigator.push(context, route).then(onGoBack);
+          Navigator.push(context, route).then(onGoBackFunc);
         },
         style: ButtonStyle(
           backgroundColor:MaterialStateProperty.all(Colors.greenAccent),
@@ -180,11 +203,12 @@ class _HomeScreenState extends State {
         ),
         onPressed: () {
           if (selectedStudent.id==0) {
-            print("Lütfen bir öğrenci seçiniz");
+            // uyarı verilecek
+            print("Öğrenci seçiniz..");
           }
           else{
             Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
-            Navigator.push(context, route).then(onGoBack);
+            Navigator.push(context, route).then(onGoBackFunc);
           }
         },
       ),
@@ -197,7 +221,7 @@ class _HomeScreenState extends State {
       flex: 1,
       child: RaisedButton(
         //style: ,
-        //color: Colors.redAccent,
+        color: Colors.redAccent,
         child: Row(
           children: const <Widget>[
             Icon(Icons.cancel_outlined),
@@ -206,7 +230,16 @@ class _HomeScreenState extends State {
           ],
         ),
         onPressed: () {
-          print("silindi");
+          if (index==0) {
+            // uyarı verilecek
+            print("Öğrenci seçiniz.");
+          } else {
+            setState(() {
+              students.removeAt(index);
+            });
+            index=0;
+            selectedStudent.id=0;
+          }
         },
       ),
     );

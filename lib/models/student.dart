@@ -1,3 +1,5 @@
+import 'dart:math';
+
 class Student{
   int? id;
   String? firstName;
@@ -5,6 +7,7 @@ class Student{
   int? grade;
   String? status;
   String? imageUrl;
+  bool secili = false;
 
   Student(String firstName, String lastName, int grade){
     this.firstName = firstName;
@@ -18,7 +21,8 @@ class Student{
     this.firstName = "";
     this.lastName = "";
     this.grade = 0;
-    this.imageUrl = "https://i.pravatar.cc/30";
+    this.imageUrl = "https://i.pravatar.cc/${Random().nextInt(20)+31}";
+    this.secili=false;
   }
 
   //named constructor

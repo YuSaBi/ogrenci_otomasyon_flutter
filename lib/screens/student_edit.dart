@@ -69,7 +69,6 @@ class _StudentEditState extends State<StudentEdit>{
       },
     );
   }
-  
 
   buildFirstNameField() {
     return TextFormField(
@@ -83,7 +82,6 @@ class _StudentEditState extends State<StudentEdit>{
       },
     );
   }
-  
 
   buildLastNameField() {
     return TextFormField(
@@ -97,7 +95,6 @@ class _StudentEditState extends State<StudentEdit>{
       },
     );
   }
-  
 
   buildGradeField() {
     return TextFormField(
@@ -111,7 +108,6 @@ class _StudentEditState extends State<StudentEdit>{
       },
     );
   }
-  
 
   buildSubmitButton() {
     return ElevatedButton(
