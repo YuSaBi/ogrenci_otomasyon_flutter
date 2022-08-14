@@ -1,6 +1,5 @@
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ogrenci_otomasyon/models/student.dart';
 import '../models/student.dart';
 
 /// MAIN CLASS ///

@@ -50,7 +50,7 @@ class _HomeScreenState extends State {
   ];
 
   Student selectedStudent = Student.withId(0, "None", "", 0, "");
-  int index=0;
+  int index=-1;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +104,12 @@ class _HomeScreenState extends State {
     setState(() {});
   }
 
+  Future refresh()async{
+    setState(() {
+      
+    });
+  }
+
   removeOnList(List student,int index){
     student.removeAt(index);
   }
@@ -122,44 +128,45 @@ class _HomeScreenState extends State {
   }
 
   builderListView() {
-    return ListView.builder(
-      itemCount: students.length,
-      itemBuilder: (BuildContext contex, int index){
-        return Column(
-          children: [
-            ListTile(
-              selected: updateListSelected(students,index),
-              selectedColor: Colors.black,
-              selectedTileColor: Colors.blue.shade100,
-              title: Text("${students[index].firstName} ${students[index].lastName}"),
-              subtitle: Text("Sınavdan aldığı not : ${students[index].grade} [${students[index].getStatus}]"),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(students[index].imageUrl.toString()),
+    return RefreshIndicator(
+      onRefresh: refresh,
+      child: ListView.builder(
+        itemCount: students.length,
+        //scrollDirection: Axis.horizontal,
+        //shrinkWrap: true,
+        itemBuilder: (BuildContext contex, int index){
+          return Column(
+            children: [
+              ListTile(
+                selected: updateListSelected(students,index),
+                selectedColor: Colors.black,
+                selectedTileColor: Colors.blue.shade100,
+                title: Text("${students[index].firstName} ${students[index].lastName}"),
+                subtitle: Text("Sınavdan aldığı not : ${students[index].grade} [${students[index].getStatus}]"),
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(students[index].imageUrl.toString()),
+                ),
+                trailing: buildStatusIcon(students[index].grade!.toInt()),
+                onTap: (){
+                  setState(() {
+                    selectedStudent=students[index];
+                    students.forEach((stdnts) => stdnts.secili = false);
+                    students[index].secili=true;
+                  });
+                  this.index = index;
+                  /*Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
+                  Navigator.push(context, route).then(onGoBackFunc);*/
+                },
+                onLongPress: () {
+                  Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
+                  Navigator.push(context, route).then(onGoBackFunc);
+                },
               ),
-              trailing: buildStatusIcon(students[index].grade!.toInt()),
-              onTap: (){
-                setState(() {
-                  selectedStudent=students[index];
-                  students.forEach((stdnts) => stdnts.secili = false);
-                  students[index].secili=true;
-                });
-                this.index = index;
-                /*Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
-                Navigator.push(context, route).then(onGoBackFunc);*/
-              },
-              onLongPress: () {
-                Route route = MaterialPageRoute(builder: (context) => StudentEdit(students,index,students[index]));
-                Navigator.push(context, route).then(onGoBackFunc);
-                /*setState(() {
-                  students.removeAt(index);// Seçilen kullanıcıyı silme
-                });*/
-                
-              },
-            ),
-            Divider(height: 5.0,color: Colors.blue.shade300,thickness: 1.0,)
-          ],
-        );
-      } 
+              Divider(height:0.0,color: Colors.blue.shade300,thickness: 1.0,)
+            ],
+          );
+        } 
+      ),
     );
   }
   
@@ -230,14 +237,14 @@ class _HomeScreenState extends State {
           ],
         ),
         onPressed: () {
-          if (index==0) {
+          if (index<0) {
             // uyarı verilecek
             print("Öğrenci seçiniz.");
           } else {
             setState(() {
               students.removeAt(index);
             });
-            index=0;
+            index=-1;
             selectedStudent.id=0;
           }
         },
